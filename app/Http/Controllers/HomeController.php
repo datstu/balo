@@ -27,12 +27,7 @@ class HomeController extends Controller
         $brand_product = DB::table('tbl_brand_product')->orderby('IDnhasanxuat','desc')->get();        
         return view('contact-us')->with('category',$cate_product)->with('brand',$brand_product);
     }
-    public function source_code(){
-
-        $cate_product = DB::table('tbl_category_product')->orderby('IDLoai','desc')->get(); 
-        $brand_product = DB::table('tbl_brand_product')->orderby('IDnhasanxuat','desc')->get();        
-        return view('pages.source-code')->with('category',$cate_product)->with('brand',$brand_product);
-    }
+    
     public function search(Request $request){
 
         $keywords = $request->keywords_submit;
