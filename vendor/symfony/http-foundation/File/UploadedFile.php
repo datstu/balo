@@ -60,10 +60,17 @@ class UploadedFile extends File
      * @throws FileException         If file_uploads is disabled
      * @throws FileNotFoundException If the file does not exist
      */
-    public function __construct(string $path, string $originalName, string $mimeType = null, int $error = null, bool $test = false)
+    public function __construct(string $path, string $originalName, string $mimeType = null, int $error = null, $test = false)
     {
         $this->originalName = $this->getName($originalName);
         $this->mimeType = $mimeType ?: 'application/octet-stream';
+
+        if (4 < \func_num_args() ? !\is_bool($test) : null !== $error && @filesize($path) === $error) {
+            @trigger_error(sprintf('Passing a size as 4th argument to the constructor of "%s" is deprecated since Symfony 4.1.', __CLASS__), E_USER_DEPRECATED);
+            $error = $test;
+            $test = 5 < \func_num_args() ? func_get_arg(5) : false;
+        }
+
         $this->error = $error ?: UPLOAD_ERR_OK;
         $this->test = $test;
 
@@ -137,6 +144,23 @@ class UploadedFile extends File
     }
 
     /**
+     * Returns the file size.
+     *
+     * It is extracted from the request from which the file has been uploaded.
+     * Then it should not be considered as a safe value.
+     *
+     * @deprecated since Symfony 4.1, use getSize() instead.
+     *
+     * @return int|null The file sizes
+     */
+    public function getClientSize()
+    {
+        @trigger_error(sprintf('The "%s()" method is deprecated since Symfony 4.1. Use getSize() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return $this->getSize();
+    }
+
+    /**
      * Returns the upload error.
      *
      * If the upload was successful, the constant UPLOAD_ERR_OK is returned.
@@ -164,11 +188,14 @@ class UploadedFile extends File
     /**
      * Moves the file to a new location.
      *
+     * @param string $directory The destination folder
+     * @param string $name      The new file name
+     *
      * @return File A File object representing the new file
      *
      * @throws FileException if, for any reason, the file could not have been moved
      */
-    public function move(string $directory, string $name = null)
+    public function move($directory, $name = null)
     {
         if ($this->isValid()) {
             if ($this->test) {
@@ -181,7 +208,7 @@ class UploadedFile extends File
             $moved = move_uploaded_file($this->getPathname(), $target);
             restore_error_handler();
             if (!$moved) {
-                throw new FileException(sprintf('Could not move the file "%s" to "%s" (%s).', $this->getPathname(), $target, strip_tags($error)));
+                throw new FileException(sprintf('Could not move the file "%s" to "%s" (%s)', $this->getPathname(), $target, strip_tags($error)));
             }
 
             @chmod($target, 0666 & ~umask());
@@ -216,24 +243,13 @@ class UploadedFile extends File
      */
     public static function getMaxFilesize()
     {
-        $sizePostMax = self::parseFilesize(ini_get('post_max_size'));
-        $sizeUploadMax = self::parseFilesize(ini_get('upload_max_filesize'));
+        $iniMax = strtolower(ini_get('upload_max_filesize'));
 
-        return min($sizePostMax ?: PHP_INT_MAX, $sizeUploadMax ?: PHP_INT_MAX);
-    }
-
-    /**
-     * Returns the given size from an ini value in bytes.
-     */
-    private static function parseFilesize($size): int
-    {
-        if ('' === $size) {
-            return 0;
+        if ('' === $iniMax) {
+            return PHP_INT_MAX;
         }
 
-        $size = strtolower($size);
-
-        $max = ltrim($size, '+');
+        $max = ltrim($iniMax, '+');
         if (0 === strpos($max, '0x')) {
             $max = \intval($max, 16);
         } elseif (0 === strpos($max, '0')) {
@@ -242,7 +258,7 @@ class UploadedFile extends File
             $max = (int) $max;
         }
 
-        switch (substr($size, -1)) {
+        switch (substr($iniMax, -1)) {
             case 't': $max *= 1024;
             // no break
             case 'g': $max *= 1024;

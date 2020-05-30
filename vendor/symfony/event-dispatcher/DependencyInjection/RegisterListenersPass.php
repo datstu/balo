@@ -18,7 +18,6 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Compiler pass to register tagged services for an event dispatcher.
@@ -68,14 +67,8 @@ class RegisterListenersPass implements CompilerPassInterface
                 $priority = isset($event['priority']) ? $event['priority'] : 0;
 
                 if (!isset($event['event'])) {
-                    if ($container->getDefinition($id)->hasTag($this->subscriberTag)) {
-                        continue;
-                    }
-
-                    $event['method'] = $event['method'] ?? '__invoke';
-                    $event['event'] = $this->getEventFromTypeDeclaration($container, $id, $event['method']);
+                    throw new InvalidArgumentException(sprintf('Service "%s" must define the "event" attribute on "%s" tags.', $id, $this->listenerTag));
                 }
-
                 $event['event'] = $aliases[$event['event']] ?? $event['event'];
 
                 if (!isset($event['method'])) {
@@ -129,23 +122,6 @@ class RegisterListenersPass implements CompilerPassInterface
             ExtractingEventDispatcher::$aliases = [];
         }
     }
-
-    private function getEventFromTypeDeclaration(ContainerBuilder $container, string $id, string $method): string
-    {
-        if (
-            null === ($class = $container->getDefinition($id)->getClass())
-            || !($r = $container->getReflectionClass($class, false))
-            || !$r->hasMethod($method)
-            || 1 > ($m = $r->getMethod($method))->getNumberOfParameters()
-            || !($type = $m->getParameters()[0]->getType())
-            || $type->isBuiltin()
-            || Event::class === ($name = $type->getName())
-        ) {
-            throw new InvalidArgumentException(sprintf('Service "%s" must define the "event" attribute on "%s" tags.', $id, $this->listenerTag));
-        }
-
-        return $name;
-    }
 }
 
 /**
@@ -158,12 +134,12 @@ class ExtractingEventDispatcher extends EventDispatcher implements EventSubscrib
     public static $aliases = [];
     public static $subscriber;
 
-    public function addListener(string $eventName, $listener, int $priority = 0)
+    public function addListener($eventName, $listener, $priority = 0)
     {
         $this->listeners[] = [$eventName, $listener[1], $priority];
     }
 
-    public static function getSubscribedEvents(): array
+    public static function getSubscribedEvents()
     {
         $events = [];
 

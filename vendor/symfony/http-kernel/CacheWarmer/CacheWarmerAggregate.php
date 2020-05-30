@@ -45,12 +45,15 @@ class CacheWarmerAggregate implements CacheWarmerInterface
 
     /**
      * Warms up the cache.
+     *
+     * @param string $cacheDir The cache directory
      */
-    public function warmUp(string $cacheDir)
+    public function warmUp($cacheDir)
     {
-        if ($collectDeprecations = $this->debug && !\defined('PHPUNIT_COMPOSER_INSTALL')) {
+        if ($this->debug) {
             $collectedLogs = [];
-            $previousHandler = set_error_handler(function ($type, $message, $file, $line) use (&$collectedLogs, &$previousHandler) {
+            $previousHandler = \defined('PHPUNIT_COMPOSER_INSTALL');
+            $previousHandler = $previousHandler ?: set_error_handler(function ($type, $message, $file, $line) use (&$collectedLogs, &$previousHandler) {
                 if (E_USER_DEPRECATED !== $type && E_DEPRECATED !== $type) {
                     return $previousHandler ? $previousHandler($type, $message, $file, $line) : false;
                 }
@@ -58,7 +61,7 @@ class CacheWarmerAggregate implements CacheWarmerInterface
                 if (isset($collectedLogs[$message])) {
                     ++$collectedLogs[$message]['count'];
 
-                    return null;
+                    return;
                 }
 
                 $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
@@ -78,8 +81,6 @@ class CacheWarmerAggregate implements CacheWarmerInterface
                     'trace' => $backtrace,
                     'count' => 1,
                 ];
-
-                return null;
             });
         }
 
@@ -95,7 +96,7 @@ class CacheWarmerAggregate implements CacheWarmerInterface
                 $warmer->warmUp($cacheDir);
             }
         } finally {
-            if ($collectDeprecations) {
+            if ($this->debug && true !== $previousHandler) {
                 restore_error_handler();
 
                 if (file_exists($this->deprecationLogsFilepath)) {
@@ -113,7 +114,7 @@ class CacheWarmerAggregate implements CacheWarmerInterface
      *
      * @return bool always false
      */
-    public function isOptional(): bool
+    public function isOptional()
     {
         return false;
     }

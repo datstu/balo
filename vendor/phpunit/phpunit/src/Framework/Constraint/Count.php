@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 /*
  * This file is part of PHPUnit.
  *
@@ -24,6 +24,8 @@ class Count extends Constraint
 
     public function __construct(int $expected)
     {
+        parent::__construct();
+
         $this->expectedCount = $expected;
     }
 
@@ -51,10 +53,6 @@ class Count extends Constraint
     {
         if ($other instanceof Countable || \is_array($other)) {
             return \count($other);
-        }
-
-        if ($other instanceof \EmptyIterator) {
-            return 0;
         }
 
         if ($other instanceof Traversable) {
@@ -87,8 +85,6 @@ class Count extends Constraint
 
             return $count;
         }
-
-        return null;
     }
 
     /**

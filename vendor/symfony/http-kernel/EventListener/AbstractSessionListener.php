@@ -15,9 +15,9 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -33,7 +33,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  * @author Tobias Schultze <http://tobion.de>
  *
- * @internal
+ * @internal since Symfony 4.3
  */
 abstract class AbstractSessionListener implements EventSubscriberInterface
 {
@@ -47,7 +47,7 @@ abstract class AbstractSessionListener implements EventSubscriberInterface
         $this->container = $container;
     }
 
-    public function onKernelRequest(RequestEvent $event)
+    public function onKernelRequest(GetResponseEvent $event)
     {
         if (!$event->isMasterRequest()) {
             return;
@@ -67,7 +67,7 @@ abstract class AbstractSessionListener implements EventSubscriberInterface
         $this->sessionUsageStack[] = $session instanceof Session ? $session->getUsageIndex() : 0;
     }
 
-    public function onKernelResponse(ResponseEvent $event)
+    public function onKernelResponse(FilterResponseEvent $event)
     {
         if (!$event->isMasterRequest()) {
             return;
@@ -85,7 +85,6 @@ abstract class AbstractSessionListener implements EventSubscriberInterface
         if ($session instanceof Session ? $session->getUsageIndex() !== end($this->sessionUsageStack) : $session->isStarted()) {
             if ($autoCacheControl) {
                 $response
-                    ->setExpires(new \DateTime())
                     ->setPrivate()
                     ->setMaxAge(0)
                     ->headers->addCacheControlDirective('must-revalidate');
@@ -107,7 +106,7 @@ abstract class AbstractSessionListener implements EventSubscriberInterface
              *    the one above. But by saving the session before long-running things in the terminate event,
              *    we ensure the session is not blocked longer than needed.
              *  * When regenerating the session ID no locking is involved in PHPs session design. See
-             *    https://bugs.php.net/61470 for a discussion. So in this case, the session must
+             *    https://bugs.php.net/bug.php?id=61470 for a discussion. So in this case, the session must
              *    be saved anyway before sending the headers with the new session ID. Otherwise session
              *    data could get lost again for concurrent requests with the new ID. One result could be
              *    that you get logged out after just logging in.
@@ -122,6 +121,9 @@ abstract class AbstractSessionListener implements EventSubscriberInterface
         }
     }
 
+    /**
+     * @internal
+     */
     public function onFinishRequest(FinishRequestEvent $event)
     {
         if ($event->isMasterRequest()) {
@@ -129,7 +131,7 @@ abstract class AbstractSessionListener implements EventSubscriberInterface
         }
     }
 
-    public static function getSubscribedEvents(): array
+    public static function getSubscribedEvents()
     {
         return [
             KernelEvents::REQUEST => ['onKernelRequest', 128],

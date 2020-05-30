@@ -2,25 +2,25 @@
 
 namespace Illuminate\Cache;
 
-use ArrayAccess;
-use BadMethodCallException;
 use Closure;
+use ArrayAccess;
 use DateTimeInterface;
-use Illuminate\Cache\Events\CacheHit;
-use Illuminate\Cache\Events\CacheMissed;
-use Illuminate\Cache\Events\KeyForgotten;
-use Illuminate\Cache\Events\KeyWritten;
-use Illuminate\Contracts\Cache\Repository as CacheContract;
-use Illuminate\Contracts\Cache\Store;
-use Illuminate\Contracts\Events\Dispatcher;
+use BadMethodCallException;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\InteractsWithTime;
+use Illuminate\Cache\Events\CacheHit;
+use Illuminate\Contracts\Cache\Store;
+use Illuminate\Cache\Events\KeyWritten;
+use Illuminate\Cache\Events\CacheMissed;
 use Illuminate\Support\Traits\Macroable;
+use Illuminate\Cache\Events\KeyForgotten;
+use Illuminate\Support\InteractsWithTime;
+use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Contracts\Cache\Repository as CacheContract;
 
 /**
  * @mixin \Illuminate\Contracts\Cache\Store
  */
-class Repository implements ArrayAccess, CacheContract
+class Repository implements CacheContract, ArrayAccess
 {
     use InteractsWithTime;
     use Macroable {
@@ -85,7 +85,7 @@ class Repository implements ArrayAccess, CacheContract
      * Retrieve an item from the cache by key.
      *
      * @param  string  $key
-     * @param  mixed  $default
+     * @param  mixed   $default
      * @return mixed
      */
     public function get($key, $default = null)
@@ -134,13 +134,17 @@ class Repository implements ArrayAccess, CacheContract
      */
     public function getMultiple($keys, $default = null)
     {
-        $defaults = [];
-
-        foreach ($keys as $key) {
-            $defaults[$key] = $default;
+        if (is_null($default)) {
+            return $this->many($keys);
         }
 
-        return $this->many($defaults);
+        foreach ($keys as $key) {
+            if (! isset($default[$key])) {
+                $default[$key] = null;
+            }
+        }
+
+        return $this->many($default);
     }
 
     /**
@@ -174,7 +178,7 @@ class Repository implements ArrayAccess, CacheContract
      * Retrieve an item from the cache and delete it.
      *
      * @param  string  $key
-     * @param  mixed  $default
+     * @param  mixed   $default
      * @return mixed
      */
     public function pull($key, $default = null)
@@ -188,7 +192,7 @@ class Repository implements ArrayAccess, CacheContract
      * Store an item in the cache.
      *
      * @param  string  $key
-     * @param  mixed  $value
+     * @param  mixed   $value
      * @param  \DateTimeInterface|\DateInterval|int|null  $ttl
      * @return bool
      */
@@ -205,7 +209,7 @@ class Repository implements ArrayAccess, CacheContract
         $seconds = $this->getSeconds($ttl);
 
         if ($seconds <= 0) {
-            return $this->forget($key);
+            return $this->delete($key);
         }
 
         $result = $this->store->put($this->itemKey($key), $value, $seconds);
@@ -279,14 +283,14 @@ class Repository implements ArrayAccess, CacheContract
      */
     public function setMultiple($values, $ttl = null)
     {
-        return $this->putMany(is_array($values) ? $values : iterator_to_array($values), $ttl);
+        return $this->putMany($values, $ttl);
     }
 
     /**
      * Store an item in the cache if the key does not exist.
      *
      * @param  string  $key
-     * @param  mixed  $value
+     * @param  mixed   $value
      * @param  \DateTimeInterface|\DateInterval|int|null  $ttl
      * @return bool
      */
@@ -504,7 +508,7 @@ class Repository implements ArrayAccess, CacheContract
     /**
      * Get the default cache time.
      *
-     * @return int|null
+     * @return int
      */
     public function getDefaultCacheTime()
     {
@@ -548,16 +552,6 @@ class Repository implements ArrayAccess, CacheContract
     }
 
     /**
-     * Get the event dispatcher instance.
-     *
-     * @return \Illuminate\Contracts\Events\Dispatcher
-     */
-    public function getEventDispatcher()
-    {
-        return $this->events;
-    }
-
-    /**
      * Set the event dispatcher instance.
      *
      * @param  \Illuminate\Contracts\Events\Dispatcher  $events
@@ -594,7 +588,7 @@ class Repository implements ArrayAccess, CacheContract
      * Store an item in the cache for the default time.
      *
      * @param  string  $key
-     * @param  mixed  $value
+     * @param  mixed   $value
      * @return void
      */
     public function offsetSet($key, $value)
@@ -634,7 +628,7 @@ class Repository implements ArrayAccess, CacheContract
      * Handle dynamic calls into macros or pass missing methods to the store.
      *
      * @param  string  $method
-     * @param  array  $parameters
+     * @param  array   $parameters
      * @return mixed
      */
     public function __call($method, $parameters)

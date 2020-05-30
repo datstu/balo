@@ -2,15 +2,13 @@
 
 namespace Illuminate\Notifications;
 
+use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Traits\Localizable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Collection as ModelCollection;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Events\NotificationSending;
-use Illuminate\Notifications\Events\NotificationSent;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
-use Illuminate\Support\Traits\Localizable;
 
 class NotificationSender
 {
@@ -57,8 +55,8 @@ class NotificationSender
     {
         $this->bus = $bus;
         $this->events = $events;
-        $this->locale = $locale;
         $this->manager = $manager;
+        $this->locale = $locale;
     }
 
     /**
@@ -146,7 +144,7 @@ class NotificationSender
         $response = $this->manager->driver($channel)->send($notifiable, $notification);
 
         $this->events->dispatch(
-            new NotificationSent($notifiable, $notification, $channel, $response)
+            new Events\NotificationSent($notifiable, $notification, $channel, $response)
         );
     }
 
@@ -161,7 +159,7 @@ class NotificationSender
     protected function shouldSendNotification($notifiable, $notification, $channel)
     {
         return $this->events->until(
-            new NotificationSending($notifiable, $notification, $channel)
+            new Events\NotificationSending($notifiable, $notification, $channel)
         ) !== false;
     }
 
@@ -190,23 +188,11 @@ class NotificationSender
                     $notification->locale = $this->locale;
                 }
 
-                $queue = $notification->queue;
-
-                if (method_exists($notification, 'viaQueues')) {
-                    $queue = $notification->viaQueues()[$channel] ?? null;
-                }
-
                 $this->bus->dispatch(
                     (new SendQueuedNotifications($notifiable, $notification, [$channel]))
                             ->onConnection($notification->connection)
-                            ->onQueue($queue)
+                            ->onQueue($notification->queue)
                             ->delay($notification->delay)
-                            ->through(
-                                array_merge(
-                                    method_exists($notification, 'middleware') ? $notification->middleware() : [],
-                                    $notification->middleware ?? []
-                                )
-                            )
                 );
             }
         }

@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 /*
  * This file is part of PHPUnit.
  *
@@ -14,10 +14,8 @@ use SplObjectStorage;
 /**
  * Constraint that asserts that the Traversable it is applied to contains
  * a given value.
- *
- * @deprecated Use TraversableContainsEqual or TraversableContainsIdentical instead
  */
-final class TraversableContains extends Constraint
+class TraversableContains extends Constraint
 {
     /**
      * @var bool
@@ -34,8 +32,13 @@ final class TraversableContains extends Constraint
      */
     private $value;
 
+    /**
+     * @throws \PHPUnit\Framework\Exception
+     */
     public function __construct($value, bool $checkForObjectIdentity = true, bool $checkForNonObjectIdentity = false)
     {
+        parent::__construct();
+
         $this->checkForObjectIdentity    = $checkForObjectIdentity;
         $this->checkForNonObjectIdentity = $checkForNonObjectIdentity;
         $this->value                     = $value;
@@ -52,7 +55,7 @@ final class TraversableContains extends Constraint
             return 'contains "' . $this->value . '"';
         }
 
-        return 'contains ' . $this->exporter()->export($this->value);
+        return 'contains ' . $this->exporter->export($this->value);
     }
 
     /**
@@ -73,7 +76,6 @@ final class TraversableContains extends Constraint
                     return true;
                 }
 
-                /* @noinspection TypeUnsafeComparisonInspection */
                 if (!$this->checkForObjectIdentity && $element == $this->value) {
                     return true;
                 }
@@ -84,7 +86,6 @@ final class TraversableContains extends Constraint
                     return true;
                 }
 
-                /* @noinspection TypeUnsafeComparisonInspection */
                 if (!$this->checkForNonObjectIdentity && $element == $this->value) {
                     return true;
                 }

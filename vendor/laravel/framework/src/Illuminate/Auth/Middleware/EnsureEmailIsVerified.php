@@ -3,8 +3,8 @@
 namespace Illuminate\Auth\Middleware;
 
 use Closure;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 class EnsureEmailIsVerified
 {
@@ -13,7 +13,7 @@ class EnsureEmailIsVerified
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
-     * @param  string|null  $redirectToRoute
+     * @param  string  $redirectToRoute
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle($request, Closure $next, $redirectToRoute = null)

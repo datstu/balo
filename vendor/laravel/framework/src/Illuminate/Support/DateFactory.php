@@ -115,7 +115,6 @@ class DateFactory
      * Use the given handler when generating dates (class name, callable, or factory).
      *
      * @param  mixed  $handler
-     * @return mixed
      *
      * @throws \InvalidArgumentException
      */
@@ -135,6 +134,7 @@ class DateFactory
     /**
      * Use the default date class when generating dates.
      *
+     * @param  callable  $callable
      * @return void
      */
     public static function useDefault()

@@ -10,6 +10,8 @@
  */
 namespace Carbon\Traits;
 
+use Carbon\CarbonInterface;
+
 /**
  * Trait Week.
  *
@@ -24,14 +26,14 @@ namespace Carbon\Traits;
  *
  * Depends on the following methods:
  *
- * @method static addWeeks(int $weeks = 1)
- * @method static copy()
- * @method static dayOfYear(int $dayOfYear)
- * @method string getTranslationMessage(string $key, string $locale = null, string $default = null, $translator = null)
- * @method static next(int $day)
- * @method static startOfWeek(int $day = 1)
- * @method static subWeeks(int $weeks = 1)
- * @method static year(int $year = null)
+ * @method CarbonInterface|static addWeeks(int $weeks = 1)
+ * @method CarbonInterface|static copy()
+ * @method CarbonInterface|static dayOfYear(int $dayOfYear)
+ * @method string                 getTranslationMessage(string $key)
+ * @method CarbonInterface|static next(int $day)
+ * @method CarbonInterface|static startOfWeek(int $day = 1)
+ * @method CarbonInterface|static subWeeks(int $weeks = 1)
+ * @method CarbonInterface|static year(int $year = null)
  */
 trait Week
 {
@@ -64,7 +66,7 @@ trait Week
      * @param int|null $dayOfWeek first date of week from 0 (Sunday) to 6 (Saturday)
      * @param int|null $dayOfYear first day of year included in the week #1
      *
-     * @return int|static
+     * @return int|static|CarbonInterface
      */
     public function weekYear($year = null, $dayOfWeek = null, $dayOfYear = null)
     {
@@ -84,11 +86,9 @@ trait Week
             switch ($date->weekYear(null, $dayOfWeek, $dayOfYear) - $year) {
                 case 1:
                     $date = $date->subWeeks(26);
-
                     break;
                 case -1:
                     $date = $date->addWeeks(26);
-
                     break;
             }
 
