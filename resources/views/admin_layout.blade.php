@@ -95,7 +95,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                     </a>
                     <ul class="sub">
                         <li><a href="{{URL::to('/manage-banner')}}">Quản lí banner</a></li>
-                        <li><a href="{{URL::to('/add-banner')}}">Thêm banner</a></li>
                       
                     </ul>
                 </li>

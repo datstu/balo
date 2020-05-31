@@ -46,3 +46,14 @@ Route::get('/unactive-product/{product_id}','ProductController@unactive_product'
 Route::get('/active-product/{product_id}','ProductController@active_product');
 Route::post('/save-product','ProductController@save_product');
 Route::post('/update-product/{product_id}','ProductController@update_product');
+
+//banner
+Route::get('/manage-banner','BannerController@manage_banner');
+Route::get('/add-banner','BannerController@add_banner');
+Route::post('/save-banner','BannerController@save_banner');
+Route::get('/unactive-banner/{banner_id}','BannerController@unactive_banner');
+Route::get('/active-banner/{banner_id}','BannerController@active_banner');	
+
+//Login facebook
+Route::get('/login-facebook','AdminController@login_facebook');
+Route::get('/admin/callback','AdminController@callback_facebook');
