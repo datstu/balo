@@ -23,6 +23,11 @@ return [
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],
+        'facebook' => [
+        'client_id' => '190207118800823',  //client face của bạn
+        'client_secret' => '20041348243425867db522602fef7778',  //client app service face của bạn
+        'redirect' => 'http://localhost/balo/admin/callback' //callback trả về
+    ],
 
     'ses' => [
         'key' => env('AWS_ACCESS_KEY_ID'),
