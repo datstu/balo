@@ -16,7 +16,7 @@
                         <div class="panel-body">
 
                             <div class="position-center">
-                                <form role="form" action="{{URL::to('/save-brand-product')}}" method="post">
+                                <form role="form" action="{{URL::to('/save-brand-product')}}" method="post" enctype="multipart/form-data"> 
                                     {{ csrf_field() }}
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Tên thương hiệu</label>
@@ -25,7 +25,11 @@
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">slug</label>
                                     <input type="text" name="slug_brand_product" class="form-control" id="exampleInputEmail1" placeholder="Tên danh mục">
-                                </div>                                 
+                                </div>   
+                                  <div class="form-group">
+                                    <label for="exampleInputEmail1">Hình ảnh thương hiệu</label>
+                                    <input type="file" name="brand_image" class="form-control" id="exampleInputEmail1">
+                                </div>                              
                                 <button type="submit" name="add_category_product" class="btn btn-info">Thêm thương hiệu</button>
                                 </form>
                             </div>

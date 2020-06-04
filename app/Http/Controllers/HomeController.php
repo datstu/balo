@@ -16,11 +16,11 @@ class HomeController extends Controller
         //$banner = Banner::orderby('banner_id','DESC')->where('banner_status','1')->take(3)->get();  
 
     	$cate_product = DB::table('tbl_category_product')->orderby('IDLoai','desc')->get(); 
-        $brand_product = DB::table('tbl_brand_product')->orderby('IDnhasanxuat','desc')->get(); 
+      /*  $brand_product = DB::table('tbl_brand_product')->orderby('IDnhasanxuat','desc')->get(); 
          $all_product = DB::table('tbl_product')->where('product_status','0')->orderby('product_id','desc')->limit(6)->get(); 
 
     	/*return view('pages.home')->with('category',$cate_product)->with('brand',$brand_product)->with('all_product_main',$all_product)->with('banner',$banner);*/
-        return view('pages.home')->with('category',$cate_product)->with('brand',$brand_product)->with('all_product_main',$all_product);
+        return view('pages.sanpham.sp_noibat')->with('category',$cate_product);
     }
     public function contact_us(){
 

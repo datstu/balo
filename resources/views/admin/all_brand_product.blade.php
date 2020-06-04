@@ -43,7 +43,8 @@
               </label>
             </th>
             <th>Tên thương hiệu</th>
-            <th>Slug</th>            
+            <th>Slug</th>     
+            <th>Hình ảnh</th>       
             <th style="width:30px;"></th>
           </tr>
         </thead>
@@ -52,7 +53,9 @@
           <tr>
             <td><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
             <td>{{ $brand_pro->TenNhasanxuat }}</td>
-            <td>{{ $brand_pro->slug_brand_product }}</td>          
+            <td>{{ $brand_pro->slug_brand_product }}</td>   
+              
+            <td> <img src="public/uploads/brand/{{ $brand_pro->image }}" height="100" width="100">   </td>  
             <td>
               <a href="{{URL::to('/edit-brand-product/'.$brand_pro->IDnhasanxuat)}}" class="active styling-edit" ui-toggle-class="">
                 <i class="fa fa-pencil-square-o text-success text-active"></i></a>

@@ -35,9 +35,30 @@ class BrandProduct extends Controller
         $data = array();
         $data['TenNhasanxuat'] = $request->TenNhasanxuat;
         $data['slug_brand_product'] = $request->slug_brand_product;
-        DB::table('tbl_brand_product')->insert($data);
-        Session::put('message','Thêm thương hiệu sản phẩm thành công');
-        return Redirect::to('add-brand-product');
+         
+
+        $get_image = $request->file('brand_image');
+      
+        if($get_image){
+            $get_name_image = $get_image->getClientOriginalName();
+            $name_image = current(explode('.',$get_name_image));
+            $new_image =  $name_image.rand(0,99).'.'.$get_image->getClientOriginalExtension();
+            $get_image->move('public/uploads/brand',$new_image);
+            $data['image'] = $new_image;
+           DB::table('tbl_brand_product')->insert($data);
+             Session::put('message','Thêm thương hiệu sản phẩm thành công');
+          
+        }else {
+              Session::put('message','Vui lòng chọn file. ');
+         
+        }
+         return Redirect::to('add-brand-product');
+
+
+
+        
+       
+        
     }
     public function edit_brand_product($IDnhasanxuat){
         $this->AuthLogin();
