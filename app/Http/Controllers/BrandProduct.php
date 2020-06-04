@@ -66,14 +66,35 @@ class BrandProduct extends Controller
 
         $manager_brand_product  = view('admin.edit_brand_product')->with('edit_brand_product',$edit_brand_product);
 
+
         return view('admin_layout')->with('admin.edit_brand_product', $manager_brand_product);
     }
     public function update_brand_product(Request $request,$IDnhasanxuat){
         $this->AuthLogin();
         $data = array();
         $data['TenNhasanxuat'] = $request->TenNhasanxuat;
-        DB::table('tbl_brand_product')->where('IDnhasanxuat',$IDnhasanxuat)->update($data);
-        Session::put('message','Cập nhật thương hiệu sản phẩm thành công');
+        $data['slug_brand_product'] = $request->slug;
+
+        $get_image = $request->file('brand_image');
+        
+        if($get_image){
+                    $get_name_image = $get_image->getClientOriginalName();
+                    $name_image = current(explode('.',$get_name_image));
+                    $new_image =  $name_image.rand(0,99).'.'.$get_image->getClientOriginalExtension();
+                    $get_image->move('public/uploads/brand',$new_image);
+                    $data['image'] = $new_image;
+                    DB::table('tbl_brand_product')->where('IDnhasanxuat',$IDnhasanxuat)->update($data);
+                     Session::put('message','Cập nhật thương hiệu sản phẩm thành công');
+                   
+        }else {
+
+            DB::table('tbl_brand_product')->where('IDnhasanxuat',$IDnhasanxuat)->update($data);
+                  Session::put('message','Cập nhật thương hiệu sản phẩm thành công');
+        }
+
+
+
+        
         return Redirect::to('all-brand-product');
     }
     public function delete_brand_product($IDnhasanxuat){
