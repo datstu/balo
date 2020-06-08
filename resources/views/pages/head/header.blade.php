@@ -28,7 +28,21 @@
                                 </ul>
                             </div>
                             <div class="header__top__right__auth">
-                                <a href="{{URL::to('/login-checkout')}}"><i class="fa fa-user"></i> Đăng nhập</a>
+                                <?php
+                                   $customer_id = Session::get('customer_id');
+                                   if($customer_id!=NULL){ 
+                                   
+                                 ?>
+                                  <a href="{{URL::to('/logout-checkout')}}"><i class="fa fa-unlock"></i> Đăng xuất</a>
+                                
+                                <?php
+                            }else{
+                               
+                                 ?>
+                                 <a href="{{URL::to('/login-checkout')}}"><i class="fa fa-lock"></i> Đăng nhsập</a>
+                                 <?php 
+                                 }
+                                 ?>
                             </div>
                         </div>
                     </div>
@@ -46,7 +60,7 @@
                     <nav class="header__menu">
                         <ul>
                             <li class="active"><a href="{{URL::to('/')}}">Trang Chủ</a></li>
-                            <li><a href="{{URL::to('/all_sp')}}">Sản phẩm</a></li>
+                            <li><a href="{{URL::to('/danh-sach-san-pham')}}">Sản phẩm</a></li>
                             {{-- <li><a href="#">Pages</a>
                                 <ul class="header__menu__dropdown">
                                     <li><a href="./shop-details.html">Shop Details</a></li>
@@ -55,7 +69,7 @@
                                     <li><a href="./blog-details.html">Blog Details</a></li>
                                 </ul>
                             </li> --}}
-                            <li><a href="{{URL::to('/tintuc')}}">Tin tức</a></li>
+                           {{--  <li><a href="{{URL::to('/tintuc')}}">Tin tức</a></li> --}}
                             <li><a href="{{URL::to('/nhom6')}}">Nhóm 6</a></li>
                         </ul>
                     </nav>

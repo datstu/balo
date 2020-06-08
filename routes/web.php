@@ -16,12 +16,17 @@ Route::get('/trang-chu','HomeController@index');
 Route::get('/contact-us','HomeController@contact_us');
 Route::get('/source-code','HomeController@source_code');
 Route::post('/search','HomeController@search');
+Route::get('/nhom6','HomeController@nhom6');
 
 
 //Danh muc san pham trang chu
 Route::get('/danh-muc-san-pham/{slug_category_product}','CategoryProduct@show_category_home');
 Route::get('/thuong-hieu-san-pham/{brand_slug}','BrandProduct@show_brand_home');
 Route::get('/chi-tiet-san-pham/{product_slug}','ProductController@details_product');
+Route::get('/san-pham-theo-{product_slug}','ProductController@list_product_for_cate');
+
+Route::get('/danh-sach-san-pham-theo-hang-{brand_slug}','ProductController@list_product_for_brand');
+Route::get('/danh-sach-san-pham','ProductController@all_product_user');
 
 //Backend
 Route::get('/admin','AdminController@index');

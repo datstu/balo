@@ -57,20 +57,20 @@
     <section class="latest-product spad">
         <div class="container">
             <div class="row">
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-6 col-md-6">
                     <div class="latest-product__text">@include('pages/sanpham/sp_moinhat')</div>
                 </div>
-                <div class="col-lg-4 col-md-6">
+                {{-- <div class="col-lg-4 col-md-6">
                     <div class="latest-product__text">@include('pages/sanpham/sp_danhgia')</div>
-                </div>
-                <div class="col-lg-4 col-md-6">@include('pages/sanpham/sp_khuyenmai')</div>
+                </div> --}}
+                <div class="col-lg-6 col-md-6">  <div class="latest-product__text">@include('pages/sanpham/sp_khuyenmai')</div></div>
             </div>
         </div>
     </section>
     <!-- Latest Product Section End -->
 
     <!-- Blog Section Begin -->
-    <section class="from-blog spad">@include('pages/tintuc')</section>
+   {{--  <section class="from-blog spad">@include('pages/tintuc')</section> --}}
     <!-- Blog Section End -->
 
     <!-- Footer Section Begin -->

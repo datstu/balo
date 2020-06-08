@@ -1,137 +1,202 @@
 @extends('layout')
 @section('content')
-@foreach($product_details as $key => $value)
-<div class="product-details"><!--product-details-->
-						<div class="col-sm-5">
-							<div class="view-product">
-								<img src="{{URL::to('/public/uploads/product/'.$value->product_image)}}" alt="" />
-								<h3>ZOOM</h3>
-							</div>
-							<div id="similar-product" class="carousel slide" data-ride="carousel">
-								
-								  <!-- Wrapper for slides -->
-								    <div class="carousel-inner">
+{{-- <section class="breadcrumb-section set-bg" data-setbg="{{asset('public/user/img/banner/chitiet.png')}}">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="breadcrumb__text">
+                        <h2>Vegetable’s Package</h2>
+                        <div class="breadcrumb__option">
+                            <a href="./index.html">Home</a>
+                            <a href="./index.html">Vegetables</a>
+                            <span>Vegetable’s Package</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> --}}
+    <!-- Breadcrumb Section End -->
 
-										<div class="item active">
-										  <a href=""><img src="{{URL::to('public/frontend/images/similar1.jpg')}}" alt=""></a>
-										  <a href=""><img src="{{URL::to('public/frontend/images/similar2.jpg')}}" alt=""></a>
-										  <a href=""><img src="{{URL::to('public/frontend/images/similar3.jpg')}}" alt=""></a>
-										</div>	
-									</div>
-								  <!-- Controls -->
-								  <a class="left item-control" href="#similar-product" data-slide="prev">
-									<i class="fa fa-angle-left"></i>
-								  </a>
-								  <a class="right item-control" href="#similar-product" data-slide="next">
-									<i class="fa fa-angle-right"></i>
-								  </a>
-							</div>
+    <!-- Product Details Section Begin -->
+   
+    <section class="product-details spad">
+        <div class="container">
+            <div class="row">
+                @foreach($product_details as $pd)
+                <div class="col-lg-6 col-md-6">
+                    <div class="product__details__pic">
+                        <div class="product__details__pic__item">
+                            <img style="height: 350px; width: 350px;" class="product__details__pic__item--large"
+                                src="{{asset('public/uploads/product/'.$pd->product_image)}}" alt="">
+                        </div>
 
-						</div>
-						<div class="col-sm-7">
-							<div class="product-information"><!--/product-information-->
-								<img src="images/product-details/new.jpg" class="newarrival" alt="" />
-								<h2>{{$value->product_name}}</h2>
-								<p>Mã ID: {{$value->product_id}}</p>
-								<img src="images/product-details/rating.png" alt="" />
-								
-								<form action="{{URL::to('/save-cart')}}" method="POST">
-									{{ csrf_field() }}
-								<span>
-									<span>{{number_format($value->product_price).'.'.'VNĐ'}}</span>
-								
-									<label>Số lượng:</label>
-									<input name="qty" type="number" min="1"  value="1" />
-									<input name="productid_hidden" type="hidden"  value="{{$value->product_id}}" />
-									<button type="submit" class="btn btn-fefault cart">
-										<i class="fa fa-shopping-cart"></i>
-										Thêm giỏ hàng
-									</button>
-							
-								</span>
-								</form>
+                        <div class="product__details__pic__slider owl-carousel">
+                       
+                            <img data-imgbigurl="{{asset('public/user/img/product/details/product-details-4.jpg')}}"
+                                src="{{asset('public/user/img/product/details/product-details-4.jpg')}}" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="product__details__text">
+                        <h3>{{$pd->product_name}}</h3>
+                        <div class="product__details__rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-half-o"></i>
+                            <span>(18 reviews)</span>
+                        </div>
+                        <form action="{{URL::to('/save-cart')}}" method="POST">
+                                    {{ csrf_field() }}
+                        <div class="product__details__price">{{number_format($pd->product_price).' '.'VNĐ'}}</div>
+                        <p>{{$pd->product_content}}</p>
+                        <div class="product__details__quantity">
+                            <div class="quantity">
+                                <div class="pro-qty">
+                                    <input type="number" name="qty" value="1">
+                                </div>
+                            </div>
+                        </div>
+                        <input name="productid_hidden" type="hidden"  value="{{$pd->product_id}}" />
+                       <button type="submit" class="primary-btn">Thêm vào giỏ</button>
+                       <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
+                        </form>
+                        
+                      {{--   <ul>
+                            <li><b>Availability</b> <span>In Stock</span></li>
+                            <li><b>Shipping</b> <span>01 day shipping. <samp>Free pickup today</samp></span></li>
+                            <li><b>Weight</b> <span>0.5 kg</span></li>
+                            <li><b>Share on</b>
+                                <div class="share">
+                                    <a href="#"><i class="fa fa-facebook"></i></a>
+                                    <a href="#"><i class="fa fa-twitter"></i></a>
+                                    <a href="#"><i class="fa fa-instagram"></i></a>
+                                    <a href="#"><i class="fa fa-pinterest"></i></a>
+                                </div>
+                            </li>
+                        </ul> --}}
+                    </div>
+                </div>
+                <div class="col-lg-12">{{-- 
+                    <div class="product__details__tab">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab"
+                                    aria-selected="true">Description</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab"
+                                    aria-selected="false">Information</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab"
+                                    aria-selected="false">Reviews <span>(1)</span></a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                                <div class="product__details__tab__desc">
+                                    <h6>Products Infomation</h6>
+                                    <p>Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.
+                                        Pellentesque in ipsum id orci porta dapibus. Proin eget tortor risus. Vivamus
+                                        suscipit tortor eget felis porttitor volutpat. Vestibulum ac diam sit amet quam
+                                        vehicula elementum sed sit amet dui. Donec rutrum congue leo eget malesuada.
+                                        Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur arcu erat,
+                                        accumsan id imperdiet et, porttitor at sem. Praesent sapien massa, convallis a
+                                        pellentesque nec, egestas non nisi. Vestibulum ac diam sit amet quam vehicula
+                                        elementum sed sit amet dui. Vestibulum ante ipsum primis in faucibus orci luctus
+                                        et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam
+                                        vel, ullamcorper sit amet ligula. Proin eget tortor risus.</p>
+                                        <p>Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Lorem
+                                        ipsum dolor sit amet, consectetur adipiscing elit. Mauris blandit aliquet
+                                        elit, eget tincidunt nibh pulvinar a. Cras ultricies ligula sed magna dictum
+                                        porta. Cras ultricies ligula sed magna dictum porta. Sed porttitor lectus
+                                        nibh. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.
+                                        Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Sed
+                                        porttitor lectus nibh. Vestibulum ac diam sit amet quam vehicula elementum
+                                        sed sit amet dui. Proin eget tortor risus.</p>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tabs-2" role="tabpanel">
+                                <div class="product__details__tab__desc">
+                                    <h6>Products Infomation</h6>
+                                    <p>Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.
+                                        Pellentesque in ipsum id orci porta dapibus. Proin eget tortor risus.
+                                        Vivamus suscipit tortor eget felis porttitor volutpat. Vestibulum ac diam
+                                        sit amet quam vehicula elementum sed sit amet dui. Donec rutrum congue leo
+                                        eget malesuada. Vivamus suscipit tortor eget felis porttitor volutpat.
+                                        Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Praesent
+                                        sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ac
+                                        diam sit amet quam vehicula elementum sed sit amet dui. Vestibulum ante
+                                        ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
+                                        Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula.
+                                        Proin eget tortor risus.</p>
+                                    <p>Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Lorem
+                                        ipsum dolor sit amet, consectetur adipiscing elit. Mauris blandit aliquet
+                                        elit, eget tincidunt nibh pulvinar a. Cras ultricies ligula sed magna dictum
+                                        porta. Cras ultricies ligula sed magna dictum porta. Sed porttitor lectus
+                                        nibh. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.</p>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tabs-3" role="tabpanel">
+                                <div class="product__details__tab__desc">
+                                    <h6>Products Infomation</h6>
+                                    <p>Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.
+                                        Pellentesque in ipsum id orci porta dapibus. Proin eget tortor risus.
+                                        Vivamus suscipit tortor eget felis porttitor volutpat. Vestibulum ac diam
+                                        sit amet quam vehicula elementum sed sit amet dui. Donec rutrum congue leo
+                                        eget malesuada. Vivamus suscipit tortor eget felis porttitor volutpat.
+                                        Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Praesent
+                                        sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ac
+                                        diam sit amet quam vehicula elementum sed sit amet dui. Vestibulum ante
+                                        ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
+                                        Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula.
+                                        Proin eget tortor risus.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                 --}}</div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    <!-- Product Details Section End -->
 
-								<p><b>Tình trạng:</b> Còn hàng</p>
-								<p><b>Điều kiện:</b> Mơi 100%</p>
-								<p><b>Thương hiệu:</b> {{$value->TenNhasanxuat}}</p>
-								<p><b>Danh mục:</b> {{$value->TenLoai}}</p>
-								<a href=""><img src="images/product-details/share.png" class="share img-responsive"  alt="" /></a>
-							</div><!--/product-information-->
-						</div>
-</div><!--/product-details-->
-
-					<div class="category-tab shop-details-tab"><!--category-tab-->
-						<div class="col-sm-12">
-							<ul class="nav nav-tabs">
-								<li class="active"><a href="#details" data-toggle="tab">Mô tả</a></li>
-								<li><a href="#companyprofile" data-toggle="tab">Chi tiết sản phẩm</a></li>
-							</ul>
-						</div>
-						<div class="tab-content">
-							<div class="tab-pane fade active in" id="details" >
-								<p>{!!$value->product_desc!!}</p>
-								
-							</div>
-							
-							<div class="tab-pane fade" id="companyprofile" >
-								<p>{!!$value->product_content!!}</p>
-								
-						
-							</div>
-							
-							<div class="tab-pane fade" id="reviews" >
-								<div class="col-sm-12">
-									<form action="#">
-										<span>
-											<input type="text" placeholder="Your Name"/>
-											<input type="email" placeholder="Email Address"/>
-										</span>
-										<textarea name="" ></textarea>
-										<b>Rating: </b> <img src="{{('images/product-details/rating.png')}}" alt="" />
-										<button type="button" class="btn btn-default pull-right">
-											Submit
-										</button>
-									</form>
-								</div>
-							</div>
-							
-						</div>
-					</div><!--/category-tab-->
-	@endforeach
-
-
-			<div class="recommended_items"><!--recommended_items-->
-						<h2 class="title text-center">Sản phẩm liên quan</h2>
-						
-						<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
-							<div class="carousel-inner">
-								<div class="item active">
-							@foreach($relate as $key => $lienquan)
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											 <div class="single-products">
-		                                        <div class="productinfo text-center">
-		                                            <img src="{{URL::to('public/uploads/product/'.$lienquan->product_image)}}" alt="" />
-		                                            <h2>{{number_format($lienquan->product_price).' '.'VNĐ'}}</h2>
-		                                            <p>{{$lienquan->product_name}}</p>
-		                                            <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Thêm giỏ hàng</a>
-		                                        </div>
-		                                      
-                                			</div>
-										</div>
-									</div>
-							@endforeach		
-
-								
-								</div>
-									
-							</div>
-							 <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
-								<i class="fa fa-angle-left"></i>
-							  </a>
-							  <a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
-								<i class="fa fa-angle-right"></i>
-							  </a>			
-						</div>
-					</div><!--/recommended_items-->
+    <!-- Related Product Section Begin -->
+    <section class="related-product">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title related__product__title">
+                        <h2>Sản phẩm liên quan</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                
+              
+               @foreach($relate as $pd)
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product__item">
+                        <div class="product__item__pic set-bg" data-setbg="{{asset('public/uploads/product/'.$pd->product_image)}}">
+                            <ul class="product__item__pic__hover">
+                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                                <li><a href="{{URL::to('/chi-tiet-san-pham/'.$pd->product_slug)}}"><i class="fa fa-retweet"></i></a></li>
+                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                            </ul>
+                        </div>
+                        <div class="product__item__text">
+                            <h6><a href="{{URL::to('/chi-tiet-san-pham/'.$pd->product_slug)}}">{{$pd->product_name}}</a></h6>
+                            <h5>{{number_format($pd->product_price).' '.'VNĐ'}}</h5>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
 @endsection

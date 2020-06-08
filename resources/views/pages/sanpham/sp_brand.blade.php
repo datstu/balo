@@ -4,30 +4,23 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="section-title">
-                        <h2>Sản phẩm Nổi bật</h2>
+
+                        @foreach($brand as $br)
+
+                        @if($br->slug_brand_product == $slug_brand)
+                        <h2>Sản phẩm theo hãng {{$br->TenNhasanxuat}}</h2>
+                        @endif
+                        @endforeach
                     </div>
-                    <div class="featured__controls">
-                        <ul>
-                            
-                            <li class="active" data-filter="*">All</li>
-                            @foreach($cate_product_hot as $pd)
-                            
-                            <li data-filter=".{{$pd->slug_category_product}}">{{$pd->TenLoai}}</li>
-                           
-                            @endforeach
-                        </ul>
-                    </div>
+                  
                 </div>
             </div>
-            <div class="row featured__filter"> 
-                @foreach($all_product as $pd)
-                @if($pd->trangthai != 1 && $pd->trangthai != 2)
-                <div class="col-lg-3 col-md-4 col-sm-6 mix 
-                <?php 
-                    foreach($cate_product_hot as $val)
-                    if($pd->IDLoai == $val->IDLoai)
-                    echo($val->slug_category_product);
-                ?> ">
+            <div class="row featured__filter">
+
+             
+                @foreach($list_product_brand as $pd)
+               
+                <div class="col-lg-3 col-md-4 col-sm-6 mix ">
                     <div class="featured__item">
                       <div class="featured__item__pic set-bg" data-setbg="{{asset('public/uploads/product/'.$pd->product_image)}}">
                             <ul class="featured__item__pic__hover">
@@ -44,7 +37,7 @@
                         </div>
                     </div>
                 </div>
-                 @endif
+                
                 @endforeach
             </div>
         </div>

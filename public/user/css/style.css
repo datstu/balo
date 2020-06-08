@@ -1057,6 +1057,7 @@ ol {
 	display: flex;
 	align-items: center;
 	padding: 45px 0 40px;
+	    background-size: cover;
 }
 
 .breadcrumb__text h2 {

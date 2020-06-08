@@ -50,6 +50,7 @@
             <th>Thương hiệu</th>
             <th>Số lượng</th>
             <th>Hiển thị</th>
+            <th>Trạng thái</th>
             
             <th style="width:30px;"></th>
           </tr>
@@ -78,6 +79,16 @@
                }
               ?>
             </span></td>
+            <td> 
+              <?php if($pro->trangthai == 0) 
+                      echo "Nổi Bật";
+                    else if($pro->trangthai == 1)
+                      echo "Giảm giá";
+                    else echo "Hết hàng";
+                ?>
+                          
+         
+        </td>
            
             <td>
               <a href="{{URL::to('/edit-product/'.$pro->product_id)}}" class="active styling-edit" ui-toggle-class="">
@@ -86,6 +97,7 @@
                 <i class="fa fa-times text-danger text"></i>
               </a>
             </td>
+
           </tr>
           @endforeach
         </tbody>

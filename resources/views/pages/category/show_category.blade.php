@@ -6,7 +6,7 @@
                     
                     <div class="col-lg-3">
                         <div class="categories__item set-bg" data-setbg="{{asset('public/uploads/brand/'.$name->image)}}">
-                            <h5><a href="#">{{$name->TenNhasanxuat}}</a></h5>
+                            <h5><a href="{{URL::to('/danh-sach-san-pham-theo-hang-'.$name->slug_brand_product)}}">{{$name->TenNhasanxuat}}</a></h5>
                         </div>
                     </div>
                     @endforeach

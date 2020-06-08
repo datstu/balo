@@ -28,6 +28,19 @@ class ProductController extends Controller
     	
 
     }
+     public function all_product_user(){
+        
+        
+        $brand = DB::table('tbl_brand_product')->orderby('IDnhasanxuat','desc')->get(); 
+        $cate_product = DB::table('tbl_category_product')->orderby('IDLoai','desc')->get(); 
+        $all_product = DB::table('tbl_product')
+        ->join('tbl_category_product','tbl_category_product.IDLoai','=','tbl_product.IDLoai')
+        ->join('tbl_brand_product','tbl_brand_product.IDnhasanxuat','=','tbl_product.IDnhasanxuat')
+        ->orderby('tbl_product.product_id','desc')->get();
+        
+        return view('pages.sanpham.sp_all')->with('all_product',$all_product)->with('brand',$brand)->with('category',$cate_product);
+
+    }
     public function all_product(){
         $this->AuthLogin();
     	$all_product = DB::table('tbl_product')
@@ -50,6 +63,7 @@ class ProductController extends Controller
         $data['IDnhasanxuat'] = $request->product_brand;
         $data['product_status'] = $request->product_status;
         $data['product_soluong'] = $request->product_soluong;
+        $data['trangthai'] = $request->trangthai;
        
         $get_image = $request->file('product_image');
       
@@ -105,6 +119,7 @@ class ProductController extends Controller
         $data['IDnhasanxuat'] = $request->product_brand;
         $data['product_soluong'] = $request->product_soluong;
         $data['product_status'] = $request->product_status;
+        $data['trangthai'] = $request->trangthai;
         $get_image = $request->file('product_image');
         
         if($get_image){
@@ -130,6 +145,9 @@ class ProductController extends Controller
     }
     //End Admin Page
     public function details_product($product_slug){
+         $all_product = DB::table('tbl_product')
+         ->where('product_status','0') 
+         ->orderby('product_id','desc')->get(); 
         $cate_product = DB::table('tbl_category_product')->orderby('IDLoai','desc')->get(); 
         $brand_product = DB::table('tbl_brand_product')->orderby('IDnhasanxuat','desc')->get(); 
 
@@ -141,7 +159,7 @@ class ProductController extends Controller
         foreach($details_product as $key => $value){
             $IDLoai = $value->IDLoai;
         }
-       
+      
 
         $related_product = DB::table('tbl_product')
         ->join('tbl_category_product','tbl_category_product.IDLoai','=','tbl_product.IDLoai')
@@ -149,7 +167,41 @@ class ProductController extends Controller
         ->where('tbl_category_product.IDLoai',$IDLoai)->whereNotIn('tbl_product.product_slug',[$product_slug])->get();
 
 
-        return view('pages.sanpham.show_details')->with('category',$cate_product)->with('brand',$brand_product)->with('product_details',$details_product)->with('relate',$related_product);
+        return view('pages.sanpham.show_details')->with('category',$cate_product)->with('brand',$brand_product)->with('product_details',$details_product)->with('relate',$related_product)->with('all_product',$all_product);
 
+    }
+    public function list_product_for_cate($slug_cate){
+        $all_product = DB::table('tbl_product')
+         ->where('product_status','0') 
+         ->orderby('product_id','desc')->get();
+          $IDLoai_ = DB::table('tbl_category_product')
+         ->where('slug_category_product',$slug_cate)->select('IDLoai')->get(); 
+         
+         foreach ($IDLoai_ as $key => $value) {
+             $IDLoai = $value->IDLoai;
+         }
+         $list_product_cate = DB::table('tbl_product')->where('IDLoai',$IDLoai)->get(); 
+          $brand = DB::table('tbl_brand_product')->orderby('IDnhasanxuat','desc')->get(); 
+          $cate_product = DB::table('tbl_category_product')->orderby('IDLoai','desc')->get(); 
+
+
+         return view('pages.sanpham.sp_theoloai')->with('all_product',$all_product)->with('brand',$brand)->with('slug_cate',$slug_cate)->with('category',$cate_product)->with('list_product_cate',$list_product_cate);
+    }
+    public function list_product_for_brand($slug_brand){
+        $all_product = DB::table('tbl_product')
+         ->where('product_status','0') 
+         ->orderby('product_id','desc')->get();
+          $IDLoai_ = DB::table('tbl_brand_product')
+         ->where('slug_brand_product',$slug_brand)->select('IDnhasanxuat')->get(); 
+         
+         foreach ($IDLoai_ as $key => $value) {
+             $IDnhasanxuat = $value->IDnhasanxuat ;
+         }
+         $list_product_brand = DB::table('tbl_product')->where('IDnhasanxuat',$IDnhasanxuat)->get(); 
+          $brand = DB::table('tbl_brand_product')->orderby('IDnhasanxuat','desc')->get(); 
+          $cate_product = DB::table('tbl_category_product')->orderby('IDLoai','desc')->get(); 
+
+          //print_r($list_product_brand);
+         return view('pages.sanpham.sp_brand')->with('all_product',$all_product)->with('brand',$brand)->with('slug_brand',$slug_brand)->with('category',$cate_product)->with('list_product_brand',$list_product_brand);
     }
 }

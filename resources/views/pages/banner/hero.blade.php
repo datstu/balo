@@ -9,7 +9,7 @@
                         </div>
                         <ul>
                             @foreach($category as $key => $cate)
-                            <li><a href="#">{{$cate->TenLoai}}</a></li>
+                            <li><a href="{{URL::to('/san-pham-theo-'.$cate->slug_category_product)}}">{{$cate->TenLoai}}</a></li>
                             @endforeach
                         </ul>
                     </div>
@@ -46,6 +46,7 @@
                             <a href="#" class="primary-btn">SHOP NOW</a>
                         </div>
                     </div>
+                    @yield('form');
                 </div>
             </div>
         </div>

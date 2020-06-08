@@ -4,13 +4,13 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="section-title">
-                        <h2>Sản phẩm Nổi bật</h2>
+                        <h2>Tất cả sản phẩm</h2>
                     </div>
                     <div class="featured__controls">
                         <ul>
                             
                             <li class="active" data-filter="*">All</li>
-                            @foreach($cate_product_hot as $pd)
+                            @foreach($category as $pd)
                             
                             <li data-filter=".{{$pd->slug_category_product}}">{{$pd->TenLoai}}</li>
                            
@@ -21,12 +21,12 @@
             </div>
             <div class="row featured__filter"> 
                 @foreach($all_product as $pd)
-                @if($pd->trangthai != 1 && $pd->trangthai != 2)
+               
                 <div class="col-lg-3 col-md-4 col-sm-6 mix 
                 <?php 
-                    foreach($cate_product_hot as $val)
+                    foreach($category as $val)
                     if($pd->IDLoai == $val->IDLoai)
-                    echo($val->slug_category_product);
+                   echo($val->slug_category_product);
                 ?> ">
                     <div class="featured__item">
                       <div class="featured__item__pic set-bg" data-setbg="{{asset('public/uploads/product/'.$pd->product_image)}}">
@@ -44,7 +44,7 @@
                         </div>
                     </div>
                 </div>
-                 @endif
+                 
                 @endforeach
             </div>
         </div>

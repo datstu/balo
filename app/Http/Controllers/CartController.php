@@ -24,6 +24,7 @@ class CartController extends Controller
         $data['options']['image'] = $product_info->product_image;
         Cart::add($data);
         return Redirect::to('/show-cart');
+        //echo($quantity);
        
     }
      public function gio_hang(Request $request){
@@ -39,7 +40,12 @@ class CartController extends Controller
 
         $cate_product = DB::table('tbl_category_product')->orderby('IDLoai','desc')->get(); 
         $brand_product = DB::table('tbl_brand_product')->orderby('IDnhasanxuat','desc')->get(); 
-        return view('pages.cart.show_cart')->with('category',$cate_product)->with('brand',$brand_product);
+
+         $all_product = DB::table('tbl_product')
+         ->where('product_status','0')
+         
+         ->orderby('product_id','desc')->get(); 
+        return view('pages.cart.show_cart')->with('category',$cate_product)->with('brand',$brand_product)->with('all_product',$all_product);
     }
     public function delete_to_cart($rowId){
         Cart::update($rowId,0);

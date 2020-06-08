@@ -52,6 +52,7 @@ class CategoryProduct extends Controller
         $this->AuthLogin();
         $data = array();
         $data['TenLoai'] = $request->TenLoai;
+        $data['slug_category_product'] = $request->slug_category_product;
         DB::table('tbl_category_product')->where('IDLoai',$IDLoai)->update($data);
         Session::put('message','Cập nhật danh mục sản phẩm thành công');
         return Redirect::to('all-category-product');
@@ -74,5 +75,6 @@ class CategoryProduct extends Controller
 
         return view('pages.category.show_category')->with('category',$cate_product)->with('brand',$brand_product)->with('category_by_id',$category_by_id)->with('category_name',$category_name);
     }
+   
 
 }

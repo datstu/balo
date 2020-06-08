@@ -81,7 +81,27 @@
                                             <option value="1">Hiển thị</option>
                                             
                                     </select>
-                                </div>                            
+                                </div>  
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Hiển thị</label>
+                                      <select name="trangthai" class="form-control input-sm m-bot15">
+                                        <?php if($pro->trangthai == 0){ ?>
+                                            <option checked value="0">Nổi Bật</option>
+                                            <option value="1">Giảm giá</option>
+                                            <option value="2">Hết hàng</option>
+                                        <?php }else if($pro->trangthai == 1){ ?>
+                                            <option  value="0">Nổi Bật</option>
+                                            <option checked value="1">Giảm giá</option>
+                                            <option value="2">Hết hàng</option>
+                                        <?php }else {  ?>
+                                            <option  value="0">Nổi Bật</option>
+                                            <option  value="1">Giảm giá</option>
+                                            <option checked value="2">Hết hàng</option>
+                                        <?php } ?>
+
+                                            
+                                    </select>
+                                </div>                              
                                
                                 <button type="submit" name="add_product" class="btn btn-info">Cập nhật sản phẩm</button>
                                 </form>

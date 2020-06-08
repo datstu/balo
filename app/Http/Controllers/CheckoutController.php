@@ -35,11 +35,19 @@ class CheckoutController extends Controller
     }
     public function login_checkout(){
 
-    	$cate_product = DB::table('tbl_category_product')->orderby('IDLoai','desc')->get();
-        $brand_product = DB::table('tbl_brand_product')->orderby('IDnhasanxuat','desc')->get(); 
+    	
+        $cate_product = DB::table('tbl_category_product')->orderby('IDLoai','desc')->get(); 
+        $brand = DB::table('tbl_brand_product')->orderby('IDnhasanxuat','desc')->get(); 
+     
+         $all_product = DB::table('tbl_product')
+         ->where('product_status','0')
+         
+         ->orderby('product_id','desc')->get(); 
 
-    	return view('pages.checkout.login_checkout')->with('category',$cate_product)->with('brand',$brand_product);
+
+    	return view('pages.banner.login_form')->with('category',$cate_product)->with('brand',$brand)->with('all_product',$all_product);
     }
+    
     public function add_customer(Request $request){
 
     	$data = array();
@@ -57,10 +65,14 @@ class CheckoutController extends Controller
 
     }
     public function checkout(){
+        $all_product = DB::table('tbl_product')
+        ->join('tbl_category_product','tbl_category_product.IDLoai','=','tbl_product.IDLoai')
+        ->join('tbl_brand_product','tbl_brand_product.IDnhasanxuat','=','tbl_product.IDnhasanxuat')
+        ->orderby('tbl_product.product_id','desc')->get();
     	$cate_product = DB::table('tbl_category_product')->orderby('IDLoai','desc')->get();
         $brand_product = DB::table('tbl_brand_product')->orderby('IDnhasanxuat','desc')->get(); 
 
-    	return view('pages.checkout.show_checkout')->with('category',$cate_product)->with('brand',$brand_product);
+    	return view('pages.checkout.show_checkout')->with('category',$cate_product)->with('brand',$brand_product)->with('all_product',$all_product);
     }
     public function save_checkout_customer(Request $request){
     	$data = array();
