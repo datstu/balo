@@ -9,6 +9,11 @@ use App\Http\Requests;
 use Illuminate\Support\Facades\Redirect;
 session_start();
 
+use App\Imports\ImportCategory;
+use App\Exports\ExportCategory;
+use Excel;
+use CategoryProductModel;
+
 class CategoryProduct extends Controller
 {
     public function AuthLogin(){
@@ -74,6 +79,39 @@ class CategoryProduct extends Controller
         $category_name = DB::table('tbl_category_product')->where('tbl_category_product.slug_category_product',$slug_category_product)->limit(1)->get();
 
         return view('pages.category.show_category')->with('category',$cate_product)->with('brand',$brand_product)->with('category_by_id',$category_by_id)->with('category_name',$category_name);
+    }
+    public function export_loaisp(){
+               return Excel::download(new ExportCategory , 'CategoryProduct.xlsx');
+    }
+    public function excel_loai(){
+               return view('admin.excel.loai');
+    }
+     public function import_loaisp(Request $request){
+       /* if($request ->hasfile('file')){
+            $file = $request->file;
+            echo "Ok";
+            $exten = $file->getClientOriginalExtension() ;
+            echo $exten;
+             if($exten != 'xlsx' ){
+                echo "Lỗi ngay";
+             }else echo "OKKKK";
+        }else echo "Chua co file";*/
+
+        if($request ->hasfile('file')){
+            $path = $request->file('file')->getRealPath();
+        Excel::import(new ImportCategory, $path);
+
+        Session::put('message','<script type="text/javascript">alert(\'Import thành công.\');</script>');
+        return back();
+        }else {
+            Session::put('message','<script type="text/javascript">alert(\'Chưa có file. Import thất bại.\');</script>');
+              return back();
+        }
+        // $path = $request->file('file')->getRealPath();
+        // Excel::import(new ImportCategory, $path);
+
+        // return back();
+
     }
    
 

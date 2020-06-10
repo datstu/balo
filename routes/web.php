@@ -107,4 +107,10 @@ Route::get('/active-banner/{banner_id}','BannerController@active_banner');
 Route::get('/login-facebook','AdminController@login_facebook');
 Route::get('/admin/callback','AdminController@callback_facebook');
 
+//excel
+//excel-loai
+Route::get('/excel-loai','CategoryProduct@excel_loai');
+Route::post('/export-loaisp','CategoryProduct@export_loaisp');
+Route::post('/import-loaisp','CategoryProduct@import_loaisp');
+
 
