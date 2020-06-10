@@ -88,7 +88,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                         <span>Tổng quan</span>
                     </a>
                 </li>
-                <li class="sub-menu">
+                <li class="sub-menu">{{-- 
                     <a href="javascript:;">
                         <i class="fa fa-book"></i>
                         <span>Banner</span>
@@ -98,7 +98,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                         <li><a href="{{URL::to('/add-banner')}}">Thêm banner</a></li>
                       
                     </ul>
-                </li>
+                 --}}</li>
                 <li class="sub-menu">
                     <a href="javascript:;">
                         <i class="fa fa-book"></i>
@@ -143,6 +143,19 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                       
                     </ul>
                 </li>
+                <li class="sub-menu">
+                    <a href="javascript:;">
+                        <i class="fa fa-book"></i>
+                        <span>Nhập Xuất Excel</span>
+                    </a>
+                    <ul class="sub">
+                        <li><a href="{{URL::to('/excel-loai')}}">Danh mục Sản phẩm</a></li>
+                        <li><a href="{{URL::to('/excel-do-hang')}}">Đơn hàng</a></li>
+                        <li><a href="{{URL::to('/excel-san-pham')}}">Sản phẩm</a></li>
+                         <li><a href="{{URL::to('/excel-khach-hang')}}">Khách hàng</a></li>
+                      
+                    </ul>
+                </li>
              
             </ul>            </div>
         <!-- sidebar menu end-->
@@ -157,7 +170,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
  <!-- footer -->
 		  <div class="footer">
 			<div class="wthree-copyright">
-			  <p>© 2017 Visitors. All rights reserved | Design by <a href="http://w3layouts.com">W3layouts</a></p>
+			  <p>© 2020 Visitors. All rights reserved | Design by <a href="http://w3layouts.com">W3layouts</a></p>
 			</div>
 		  </div>
   <!-- / footer -->
