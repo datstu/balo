@@ -10,7 +10,10 @@
 				</ol>
 			</div>
 
-			
+			<?php
+			$alert = Session::get('alert');
+			if($alert) {echo $alert; Session::put('alert',null);}
+			 ?>
 			<div class="review-payment">
 				<h2>Xem lại giỏ hàng</h2>
 			</div>
@@ -70,13 +73,40 @@
 					</tbody>
 				</table>
 			</div>
-			<h4 style="margin:40px 0;font-size: 20px;">Chọn hình thức thanh toán</h4>
-			<form method="POST" action="{{URL::to('/order-place')}}">
+			<div class="col-lg-8 col-md-6">
+				
+                            <div class="checkout__order">
+                               
+                                <?php
+				$content = Cart::content();
+
+				?>
+                                <div class="checkout__order__products">Sản phẩm <span>Tổng</span></div>
+                                <ul>
+                                	@foreach($content as $v_content)
+                                    <li>{{$v_content->name}} <span><?php
+                                    $subtotal = $v_content->price * $v_content->qty;
+                                    echo number_format($subtotal).' '.'vnđ';
+                                    ?></span></li>
+                                 @endforeach
+                                </ul>
+                                  <div class="checkout__order__total">Thuế <span>{{Cart::tax().' '.'vnđ'}}</span></div>
+                               
+                                <div class="checkout__order__total">Tổng <span>{{Cart::total().' '.'vnđ'}}</span></div>
+                                
+                                
+                                <form method="POST" action="{{URL::to('/order-place')}}">
 				{{ csrf_field() }}
-			<div class="payment-options">
-					<input type="submit" value="Đặt hàng" name="send_order_place" class="btn btn-primary btn-sm">
+				<span><label> <input type="radio" name="payment_option" value="1"> Trả bằng thẻ ATM</label></span><br>
+				<span><label><input type="radio" name="payment_option" checked value="2"> Nhận tiền mặt</label></span><br>
+				<span><label><input type="radio" name="payment_option" value="3"> Thanh toán thẻ ghi nợ</label></span>
+                                <button type="submit" name="send_order_place" class="site-btn">Đặt hàng</button>
+                                </form>
+                            </div>
+                        
 			</div>
-			</form>
+			
+			
 		</div>
 	</section> <!--/#cart_items-->
 

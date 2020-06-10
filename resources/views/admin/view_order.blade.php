@@ -122,15 +122,17 @@
           </tr>
         </thead>
         <tbody>
+          @foreach ($list_detail_order as $val)
           <tr>
            <td><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
-            <td>{{$order_by_id->shipping_name}}</td>
-            <td>{{$order_by_id->shipping_address}}</td>
-             <td>{{$order_by_id->shipping_phone}}</td>
-             <td>{{$order_by_id->product_price * $order_by_id->product_sales_quantity}}</td>
+            <td>{{$val->product_name}}</td>
+            <td>{{$val->product_sales_quantity}}</td>
+             <td>{{$val->product_price}}</td>
+             <td>{{$val->product_price * $order_by_id->product_sales_quantity}}</td>
             
           
           </tr>
+          @endforeach
         </tbody>
       </table>
     </div>

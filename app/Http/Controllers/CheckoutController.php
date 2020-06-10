@@ -72,7 +72,33 @@ class CheckoutController extends Controller
     	$cate_product = DB::table('tbl_category_product')->orderby('IDLoai','desc')->get();
         $brand_product = DB::table('tbl_brand_product')->orderby('IDnhasanxuat','desc')->get(); 
 
-    	return view('pages.checkout.show_checkout')->with('category',$cate_product)->with('brand',$brand_product)->with('all_product',$all_product);
+        $id_user = Session::get('customer_id');
+        //echo $id_user;
+        $user = DB::table('tbl_customers')->where('customer_id',$id_user)->first();
+        // echo "<pre>";
+        // print_r($user);
+        // echo "</pre>";
+         $shipping_id = Session::get('shipping_id');
+         
+          $shipping = DB::table('tbl_shipping')->get();
+          $flag = false;
+         foreach ($shipping as $key => $value) {
+            if($value->shipping_id == $shipping_id ){
+                $flag = true;
+                //echo $value->shipping_id;
+            }
+         }
+         
+            if($flag) {
+                //echo "string";
+             return Redirect::to('/payment');
+        }else{
+             //echo "not ok";
+            return view('pages.checkout.show_checkout')->with('category',$cate_product)->with('brand',$brand_product)->with('all_product',$all_product)->with('user',$user);
+        }
+         
+        
+    	
     }
     public function save_checkout_customer(Request $request){
     	$data = array();
@@ -85,14 +111,17 @@ class CheckoutController extends Controller
     	$shipping_id = DB::table('tbl_shipping')->insertGetId($data);
 
     	Session::put('shipping_id',$shipping_id);
-    	
+    	//echo "string";
     	return Redirect::to('/payment');
     }
     public function payment(){
-
+        $all_product = DB::table('tbl_product')
+        ->join('tbl_category_product','tbl_category_product.IDLoai','=','tbl_product.IDLoai')
+        ->join('tbl_brand_product','tbl_brand_product.IDnhasanxuat','=','tbl_product.IDnhasanxuat')
+        ->orderby('tbl_product.product_id','desc')->get();
         $cate_product = DB::table('tbl_category_product')->orderby('IDLoai','desc')->get();
         $brand_product = DB::table('tbl_brand_product')->orderby('IDnhasanxuat','desc')->get(); 
-        return view('pages.checkout.payment')->with('category',$cate_product)->with('brand',$brand_product);
+        return view('pages.checkout.payment')->with('category',$cate_product)->with('brand',$brand_product)->with('all_product',$all_product);
 
     }
     public function order_place(Request $request){
@@ -119,20 +148,19 @@ class CheckoutController extends Controller
             $order_d_data['product_sales_quantity'] = $v_content->qty;
             DB::table('tbl_order_details')->insert($order_d_data);
         }
-        if($data['payment_method']==1){
-
-            echo 'Thanh toán thẻ ATM';
-
-        }elseif($data['payment_method']==2){
+       if($data['payment_method']==2){
             Cart::destroy();
-
+            $all_product = DB::table('tbl_product')
+        ->join('tbl_category_product','tbl_category_product.IDLoai','=','tbl_product.IDLoai')
+        ->join('tbl_brand_product','tbl_brand_product.IDnhasanxuat','=','tbl_product.IDnhasanxuat')
+        ->orderby('tbl_product.product_id','desc')->get();
             $cate_product = DB::table('tbl_category_product')->orderby('IDLoai','desc')->get();
             $brand_product = DB::table('tbl_brand_product')->orderby('IDnhasanxuat','desc')->get(); 
-            return view('pages.checkout.handcash')->with('category',$cate_product)->with('brand',$brand_product);
+            return view('pages.checkout.handcash')->with('category',$cate_product)->with('brand',$brand_product)->with('all_product',$all_product);
 
-        }else{
-            echo 'Thẻ ghi nợ';
-
+        }else {
+             Session::put('alert','<script> alert(\'Tính năng đang được cập nhật, bạn vui lòng thanh toán tiền mặt.\');</script>');
+          return Redirect::to('/payment');
         }
         
         //return Redirect::to('/payment');
@@ -160,12 +188,15 @@ class CheckoutController extends Controller
     }
     public function manage_order(){
         
-        $this->AuthLogin();
+      /*  $this->AuthLogin();
         $all_order = DB::table('tbl_order')
         ->join('tbl_customers','tbl_order.customer_id','=','tbl_customers.customer_id')
         ->select('tbl_order.*','tbl_customers.customer_name')
         ->orderby('tbl_order.order_id','desc')->get();
         $manager_order  = view('admin.manage_order')->with('all_order',$all_order);
-        return view('admin_layout')->with('admin.manage_order', $manager_order);
+        echo "<pre>";
+        print_r($all_order);
+        echo "</pre>";*/
+       // return view('admin_layout')->with('admin.manage_order', $manager_order);
     }
 }

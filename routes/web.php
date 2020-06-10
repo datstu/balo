@@ -91,7 +91,7 @@ Route::post('/save-checkout-customer','CheckoutController@save_checkout_customer
 
 //Order
 Route::get('/print-order/{checkout_code}','OrderController@print_order');
-Route::get('/manage-order','OrderController@manage_order');
+Route::get('/manage-orders','OrderController@manage_order');
 Route::get('/view-order/{order_id}','OrderController@view_order');
 
 
